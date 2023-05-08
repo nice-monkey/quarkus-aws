@@ -1,0 +1,27 @@
+service: api-gateway
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: provided.al2
+  stage: local
+  region: us-east-1
+
+package:
+  artifact: build/function.zip
+
+custom:
+  localstack:
+    stages: [ local ]
+    host: 'http://localhost'
+    edgePort: 4566
+
+functions:
+  hello-api:
+    handler: not.used.in.provided.runtime
+    environment:
+    events:
+      - http: "ANY /{proxy+}"
+
+plugins:
+  - serverless-localstack
